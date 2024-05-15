@@ -20,4 +20,33 @@
     <button id="toggleTheme">Toggle Theme</button>
     <script src="popup.js"></script>
   </body>
+
+  <script>
+    // popup.js
+
+    document.getElementById("toggleTheme").addEventListener("click", function () {
+      chrome.storage.local.get(["theme"], function (result) {
+        let newTheme = result.theme === "dark" ? "light" : "dark";
+        chrome.storage.local.set({ theme: newTheme }, function () {
+          chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            chrome.scripting.executeScript({
+              target: { tabId: tabs[0].id },
+              func: applyTheme,
+              args: [newTheme],
+            });
+          });
+        });
+      });
+    });
+
+    function applyTheme(theme) {
+      if (theme === "dark") {
+        document.documentElement.style.filter = "invert(1) hue-rotate(180deg)";
+        document.body.style.backgroundColor = "#111";
+      } else {
+        document.documentElement.style.filter = "";
+        document.body.style.backgroundColor = "#fff";
+      }
+    }
+  </script>
 </html>
