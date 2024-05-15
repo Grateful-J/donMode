@@ -15,11 +15,24 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (changeInfo.status === "complete" && tab.active) {
     chrome.storage.local.get(["theme"], function (result) {
       let theme = result.theme || "light";
-      chrome.scripting.executeScript({
-        target: { tabId: tabId },
-        func: applyTheme,
-        args: [theme],
-      });
+      if (tabId) {
+        chrome.scripting.executeScript(
+          {
+            target: { tabId: tabId },
+            func: applyTheme,
+            args: [theme],
+          },
+          (results) => {
+            if (chrome.runtime.lastError) {
+              console.error("Script injection failed: " + chrome.runtime.lastError.message);
+            } else {
+              console.log("Script injected successfully:", results);
+            }
+          }
+        );
+      } else {
+        console.error("Invalid tabId:", tabId);
+      }
     });
   }
 });
