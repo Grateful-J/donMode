@@ -12,7 +12,7 @@ function toggleTheme() {
 
 // Listen for tab updates to apply the theme
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  if (changeInfo.status === "complete" && tab.active) {
+  if (changeInfo.status === "complete" && tab.active && isValidUrl(tab.url)) {
     chrome.storage.local.get(["theme"], function (result) {
       let theme = result.theme || "light";
       if (tabId) {
@@ -46,6 +46,11 @@ function applyTheme(theme) {
     document.documentElement.style.filter = "";
     document.body.style.backgroundColor = "#fff";
   }
+}
+
+// Function to check if the URL is valid for script injection
+function isValidUrl(url) {
+  return url && !url.startsWith("chrome://") && !url.startsWith("https://chrome.google.com");
 }
 
 // Toggle theme on page load

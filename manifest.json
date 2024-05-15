@@ -3,7 +3,8 @@
   "name": "Don Mode",
   "version": "1.0",
   "description": "Switches between light and dark modes on every page reload.",
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["scripting", "activeTab", "storage"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
   },
