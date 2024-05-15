@@ -7,3 +7,8 @@ function applyTheme(theme) {
     document.body.style.backgroundColor = "#fff";
   }
 }
+
+// Event listener for the toggle theme button
+document.getElementById("toggleTheme").addEventListener("click", function () {
+  toggleTheme();
+});

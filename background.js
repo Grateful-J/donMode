@@ -1,18 +1,19 @@
 // background.js
 
 // Function to toggle the theme
-function toggleTheme() {
+function toggleTheme(callback) {
   chrome.storage.local.get(["theme"], function (result) {
     let theme = result.theme === "dark" ? "light" : "dark";
     chrome.storage.local.set({ theme: theme }, function () {
       console.log("Theme set to " + theme);
+      if (callback) callback(theme);
     });
   });
 }
 
-// Listen for tab updates to apply the theme
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  if (changeInfo.status === "complete" && tab.active && isValidUrl(tab.url)) {
+// Listen for tab completion to apply the theme
+chrome.tabs.onCompleted.addListener(function (tabId, info, tab) {
+  if (info.status === "complete" && tab.active && isValidUrl(tab.url)) {
     chrome.storage.local.get(["theme"], function (result) {
       let theme = result.theme || "light";
       if (tabId) {
@@ -54,5 +55,9 @@ function isValidUrl(url) {
 }
 
 // Toggle theme on page load
-chrome.runtime.onInstalled.addListener(toggleTheme);
-chrome.runtime.onStartup.addListener(toggleTheme);
+chrome.runtime.onInstalled.addListener(() => {
+  toggleTheme();
+});
+chrome.runtime.onStartup.addListener(() => {
+  toggleTheme();
+});
