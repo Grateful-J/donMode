@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Don Mode",
+  "name": "Don Mode Lite",
   "version": "1.0",
   "description": "Switches between light and dark modes on every page reload.",
   "permissions": ["scripting", "activeTab", "storage"],
